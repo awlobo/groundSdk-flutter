@@ -28,10 +28,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isConnected = false;
 
   DroneStatus status = DroneStatus();
-  DroneStatusBridge staaatus = DroneStatusBridge();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              isConnected ? "Drone IS connected" : "Drone is NOT connected",
+              status.isConnected() ? "Drone IS connected" : "Drone is NOT connected",
             )
           ],
         ),
