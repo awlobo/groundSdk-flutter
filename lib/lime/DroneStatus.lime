@@ -1,6 +1,0 @@
-package com.generated
-
-class DroneStatusBridge {
-    fun isConnected(): Boolean
-    property favNumber: Int
-}
