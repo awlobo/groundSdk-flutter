@@ -11,16 +11,46 @@ import android.widget.Toast
 import com.parrot.drone.groundsdk.device.DeviceState
 import io.flutter.Log
 
+import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.GeneratedPluginRegistrant
+import io.flutter.plugin.common.BinaryMessenger
+
 
 class MainActivity: FlutterActivity() {
 
-    private val TAG = "GroundSDK.Flutter"
+    companion object {
+        const val CHANNEL = "id.awlobo.comm.channel"
+        const val KEY_NATIVE = "showNativeView"
+        const val CONNECTION_KEY = "idDroneConnected"
+        const val TAG = "GroundSDK.Flutter"
+    }
+
+    private fun getFlutterView(): BinaryMessenger = flutterEngine!!.dartExecutor.binaryMessenger
+
     private lateinit var mGroundSdk: ManagedGroundSdk
     private lateinit var mAutoConnection: Ref<AutoConnection>
     private  var mDrone: Drone? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        GeneratedPluginRegistrant.registerWith(flutterEngine!!)
+        MethodChannel(
+            getFlutterView(), CHANNEL).setMethodCallHandler { call, result ->
+
+            val channel = MethodChannel(getFlutterView(), CHANNEL)
+
+            when (call.method) {
+                KEY_NATIVE -> {
+                    channel.invokeMethod("message", "HOLA PEPSICOLA")
+                    result.success(true)
+                }
+                CONNECTION_KEY -> channel.invokeMethod("droneStatus", true)
+                else -> {
+                    result.notImplemented()
+                }
+            }
+        }
 
         Log.i(TAG, "--> STARTING APP")
         Toast.makeText(this, "START APP", Toast.LENGTH_LONG).show()
