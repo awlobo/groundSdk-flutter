@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:parrot_flutter/drone_status.dart';
 import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
-const CHANNEL = "id.awlobo.comm.channel";
-const CONNECTION_KEY = "idDroneConnected";
+const CHANNEL = "com.awlobo.communication.channel";
+const DRONE_STATUS = "droneStatus";
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,20 +30,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  static const platform = const MethodChannel(CHANNEL);
+  static const platform = MethodChannel(CHANNEL);
 
-  String _text = "Drone NOT connected";
-
-  Future<Null> _isDroneConnect() async {
-    await platform.invokeMethod(CONNECTION_KEY);
-  }
+  List<String> statusList = [];
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
-      case "droneStatus":
+      case DRONE_STATUS:
         debugPrint(call.arguments);
         _onTextChanged(call.arguments);
-        return new Future.value("");
+        return Future.value("");
     }
   }
 
@@ -50,12 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     platform.setMethodCallHandler(_handleMethod);
-    _isDroneConnect();
   }
 
-  void _onTextChanged(Bool droneStatus) {
+  void _onTextChanged(String droneStatus) {
     setState(() {
-      _text = droneStatus ? "Drone IS connected" : "Drone is NOT connected";
+      statusList.add(droneStatus);
     });
   }
 
@@ -69,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(_text)
+            Text(statusList.join("\n"))
           ],
         ),
       ),

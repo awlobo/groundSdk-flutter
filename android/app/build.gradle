@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -45,7 +45,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.awlobo.parrot_flutter"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -64,8 +64,8 @@ flutter {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.parrot.drone.groundsdk:groundsdk:1.8.0'
-//    runtimeOnly 'com.parrot.drone.groundsdk:arsdkengine:1.8.0'
-
+    implementation 'com.parrot.drone.groundsdk:groundsdk:1.8.+'
+    runtimeOnly 'com.parrot.drone.groundsdk:arsdkengine:1.8.+'
 }
